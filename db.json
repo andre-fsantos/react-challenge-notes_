@@ -1,0 +1,39 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "title": "Meeting Agenda",
+      "description": "Agenda for the weekly team meeting:\n1. Review progress on ongoing projects.\n2. Discuss upcoming deadlines.\n3. Assign tasks for the week.\n4. Any other business."
+    },
+    {
+      "id": 2,
+      "title": "Grocery List",
+      "description": "Items to buy from the grocery store:\n1. Milk\n2. Bread\n3. Eggs\n4. Apples\n5. Chicken breasts\n6. Pasta\n7. Tomato sauce\n8. Lettuce"
+    },
+    {
+      "id": 3,
+      "title": "Travel Itinerary",
+      "description": "Itinerary for the upcoming trip:\n- Destination: Paris, France\n- Dates: April 20th - April 25th\n- Accommodation: Hotel Le Bristol\n- Day 1: Visit Eiffel Tower\n- Day 2: Louvre Museum\n- Day 3: Seine River Cruise\n- Day 4: Montmartre and Sacré-Cœur Basilica"
+    },
+    {
+      "id": 4,
+      "title": "Birthday Party Planning",
+      "description": "Planning for Sarah's birthday party:\n- Date: May 5th\n- Venue: Sarah's backyard\n- Theme: Hawaiian Luau\n- Activities: Hula dancing, limbo contest, and beach volleyball\n- Food: BBQ, tropical fruit salad, and pineapple upside-down cake"
+    },
+    {
+      "id": 5,
+      "title": "Workout Routine",
+      "description": "Weekly workout routine:\n- Monday: Cardio (30 minutes)\n- Tuesday: Upper body strength training\n- Wednesday: Rest\n- Thursday: Lower body strength training\n- Friday: Yoga\n- Saturday: HIIT workout\n- Sunday: Rest"
+    },
+    {
+      "id": 6,
+      "title": "Book Recommendations",
+      "description": "List of books to read:\n1. 'The Alchemist' by Paulo Coelho\n2. 'To Kill a Mockingbird' by Harper Lee\n3. '1984' by George Orwell\n4. 'The Great Gatsby' by F. Scott Fitzgerald\n5. 'Pride and Prejudice' by Jane Austen"
+    },
+    {
+      "id": 7,
+      "title": "Home Improvement Projects",
+      "description": "List of home improvement projects:\n1. Paint the living room walls\n2. Install new light fixtures\n3. Organize the garage\n4. Plant flowers in the garden\n5. Replace old carpet with hardwood flooring"
+    }
+  ]
+}
