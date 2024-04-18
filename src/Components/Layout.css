@@ -1,0 +1,50 @@
+main {
+    background-color: lightgrey;
+    display: flex;
+    height: 100%;
+}
+
+aside {
+    padding: 10px;
+}
+
+.inputTitle {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    height: 200px;
+    border-radius: 5px;
+    max-width: 440px;
+    max-height: 510px;
+    min-height: 200px;
+    min-width: 200px;
+}
+
+.box-textarea {
+    margin: 15px 0;
+}
+
+button {
+    width: 100%;
+    padding: 8px;
+    background-color: #409ab8;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #1689af;
+}
+
+.notes {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
