@@ -46,4 +46,5 @@ button:hover {
 .notes {
     display: flex;
     flex-wrap: wrap;
+    align-content: flex-start;
 }
