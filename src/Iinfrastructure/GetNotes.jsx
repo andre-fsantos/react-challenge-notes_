@@ -1,6 +1,6 @@
-const GetNotes = async (id = '') => {
+const getNotes = async () => {
     try {
-        const response = await fetch(`http://localhost:3000/notes/${id}`);
+        const response = await fetch(`http://localhost:3000/notes`);
         if(!response.ok) {
             throw new Error('Erro ao tentar listar as notas!');
         }
@@ -11,4 +11,4 @@ const GetNotes = async (id = '') => {
     }
 }
 
-export { GetNotes }
+export { getNotes }

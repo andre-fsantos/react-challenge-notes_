@@ -1,14 +1,14 @@
 import { Note } from "./Note"
 import './Layout.css';
-import { GetNotes } from "../Iinfrastructure/GetNotes";
+import { getNotes } from "../Iinfrastructure/GetNotes";
 import { useEffect, useState } from "react";
 
 const Layout = () => {
     const [notes, setNotes] = useState([]);
 
-    const fecthGetNotes = async id => {
+    const fecthGetNotes = async () => {
         try {
-            const data = await GetNotes(id);
+            const data = await getNotes();
             setNotes(data);
         } catch (error) {
             console.log('erro');
@@ -37,6 +37,7 @@ const Layout = () => {
                     notes.length > 0 && (
                         notes.map(note => (
                             <Note
+                                key={note.id.toString()}
                                 id={note.id}
                                 title={note.title}
                                 description={note.description}
