@@ -1,6 +1,6 @@
 import { Note } from "./Note"
 import './Layout.css';
-import { getNotes } from "../Iinfrastructure/getNotes";
+import { getNotes } from "../infrastructure/getNotes";
 import { useEffect, useState } from "react";
 
 const Layout = () => {
