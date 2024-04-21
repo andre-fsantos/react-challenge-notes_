@@ -48,29 +48,3 @@ button:hover {
     flex-wrap: wrap;
     align-content: flex-start;
 }
-
-.note {
-    margin: 10px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 5px;
-    padding: 15px;
-    height: 240px;
-    width: 300px;
-}
-
-.box-btn-close {
-    display: flex;
-    background-color: transparent;
-    width: fit-content;
-    margin-left: auto;
-    padding: 1px;
-    border-radius: 50%;
-}
-
-.box-btn-close:hover {
-    background-color: rgb(252, 156, 156);
-}
-
-.box-content {
-    margin-top: 20px;
-}

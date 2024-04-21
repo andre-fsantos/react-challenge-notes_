@@ -1,6 +1,24 @@
+import { Note } from "./Note"
 import './Layout.css';
+import { getNotes } from "../infrastructure/getNotes";
+import { useEffect, useState } from "react";
 
 const Layout = () => {
+    const [notes, setNotes] = useState([]);
+
+    const fecthGetNotes = async () => {
+        try {
+            const data = await getNotes();
+            setNotes(data);
+        } catch (error) {
+            console.log('erro');
+        }
+    }
+
+    useEffect(() => {
+        fecthGetNotes();
+    }, []);
+
     return (
         <main>
             <aside>
@@ -15,15 +33,17 @@ const Layout = () => {
                 </div>
             </aside>
             <div className="notes">
-                <div className="note">
-                    <div className='box-btn-close'>
-                        <img src='/btnClose.svg' />
-                    </div>
-                    <h2>Note 1</h2>
-                    <div className='box-content'>
-                        <p>This is the content for note 1</p>
-                    </div>
-                </div>
+                {
+                    notes.length > 0 && (
+                        notes.map(note => (
+                            <Note
+                                key={note.id.toString()}
+                                title={note.title}
+                                description={note.description}
+                            />
+                        ))
+                    )
+                }
             </div>
         </main>
     )
