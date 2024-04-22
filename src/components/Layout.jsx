@@ -27,6 +27,20 @@ const Layout = () => {
         fecthGetNotes();
     }, []);
 
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+          if ((event.ctrlKey || event.metaKey) && (event.key === 'Enter' || event.keyCode === 13)) {
+            addNote();
+          }
+        };
+    
+        document.addEventListener('keydown', handleKeyPress);
+    
+        return () => {
+          document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [title, description]);
+
 
     const showToast = dataToast => {
         const TOAST_DURATION = 3000;
