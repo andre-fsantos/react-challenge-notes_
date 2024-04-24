@@ -60,15 +60,20 @@ const Layout = () => {
                 />
             }
             <aside>
-                <form onSubmit={e => e.preventDefault()}>
+                <form onSubmit={
+                    event => {
+                        event.preventDefault();
+                        addNote();
+                    }
+                }>
                     <div className="box-input-title">
-                        <input type="text" placeholder="Title" className="inputTitle" value={title} onChange={e => setTitle(e.target.value)}/>
+                        <input type="text" placeholder="Title" className="inputTitle" value={title} onChange={e => setTitle(e.target.value)} required/>
                     </div>
                     <div className="box-textarea">
-                        <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)}></textarea>
+                        <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
                     </div>
                     <div>
-                        <button onClick={addNote}>Add Note</button>
+                        <button>Add Note</button>
                     </div>
                 </form>
             </aside>
