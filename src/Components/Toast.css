@@ -7,6 +7,14 @@
     animation: animateToast 1s forwards;
 }
 
+.successful-toast {
+    background-color: #daffda;
+}
+
+.error-toast {
+    background-color: #ffc4c4;
+}
+
 @keyframes animateToast {
     from { transform: translateY(-50px); }
     to { transform: translateY(10px); }

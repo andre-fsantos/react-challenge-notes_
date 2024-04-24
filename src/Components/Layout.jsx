@@ -9,8 +9,10 @@ const Layout = () => {
     const [notes, setNotes] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [dataToast, setDataToast] = useState({});
     const [isToastVisible, setIsToastVisible] = useState(false);
+
+    const [messageToast, setMessageToast] = useState('');
+    const [toastType, setToastType] = useState('');
 
 
     const fecthGetNotes = async () => {
@@ -19,7 +21,7 @@ const Layout = () => {
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
-            throw new Error(error);
+            console.log('erro no fecthGetNotes');
         }
     }
 
@@ -42,36 +44,35 @@ const Layout = () => {
     }, [title, description]);
 
 
-    const showToast = dataToast => {
-        const TOAST_DURATION = 3000;
-        setDataToast(dataToast);
-        setIsToastVisible(true);
-
-        setTimeout(() => {
-            setIsToastVisible(false);
-        }, TOAST_DURATION);
-    }
+   
 
 
     const addNote = async () => {
         try {
             const response = await saveNote({ title, description });
-            if(response.id !== undefined) showToast({ message: 'Nota adicionada!', bgColor: '#a7f5a7' });
+
+            if(response.id) {
+                setMessageToast('Nota adicionada!');
+                setToastType('success');
+            }
             
             setTitle('');
             setDescription('');
+            setIsToastVisible(true);
             fecthGetNotes();
         } catch(error) {
-            throw new Error(error);
+            console.log('erro no saveNote');
         }
     }
 
     return (
         <main>
             {
-                isToastVisible &&
                 <Toast
-                    dataToast={dataToast}
+                    message={messageToast}
+                    type={toastType}
+                    isToastVisible={isToastVisible}
+                    setIsToastVisible={setIsToastVisible}
                 />
             }
             <aside>
