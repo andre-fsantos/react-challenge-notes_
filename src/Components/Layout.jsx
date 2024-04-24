@@ -33,16 +33,17 @@ const Layout = () => {
     const addNote = async () => {
         try {
             const response = await saveNote({ title, description });
-
-            if(response.id) {
+            const id = response.id;
+            
+            if(id) {
                 setMessageToast('Nota adicionada!');
                 setToastType('success');
+                setIsToastVisible(true);
+
+                setTitle('');
+                setDescription('');
+                setNotes((oldNotes) => [{ id, title, description }, ...oldNotes ]);
             }
-            
-            setTitle('');
-            setDescription('');
-            setIsToastVisible(true);
-            fecthGetNotes();
         } catch(error) {
             console.log('erro no saveNote');
         }
