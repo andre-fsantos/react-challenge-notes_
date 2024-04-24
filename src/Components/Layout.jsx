@@ -27,24 +27,7 @@ const Layout = () => {
 
     useEffect(() => {
         fecthGetNotes();
-    }, []);
-
-    useEffect(() => {
-        const handleKeyPress = (event) => {
-          if ((event.ctrlKey || event.metaKey) && (event.key === 'Enter' || event.keyCode === 13)) {
-            addNote();
-          }
-        };
-    
-        document.addEventListener('keydown', handleKeyPress);
-    
-        return () => {
-          document.removeEventListener('keydown', handleKeyPress);
-        };
-    }, [title, description]);
-
-
-   
+    }, []); 
 
 
     const addNote = async () => {
@@ -76,15 +59,17 @@ const Layout = () => {
                 />
             }
             <aside>
-                <div className="box-input-title">
-                    <input type="text" placeholder="Title" className="inputTitle" value={title} onChange={e => setTitle(e.target.value)}/>
-                </div>
-                <div className="box-textarea">
-                    <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)}></textarea>
-                </div>
-                <div>
-                    <button onClick={addNote}>Add Note</button>
-                </div>
+                <form onSubmit={e => e.preventDefault()}>
+                    <div className="box-input-title">
+                        <input type="text" placeholder="Title" className="inputTitle" value={title} onChange={e => setTitle(e.target.value)}/>
+                    </div>
+                    <div className="box-textarea">
+                        <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)}></textarea>
+                    </div>
+                    <div>
+                        <button onClick={addNote}>Add Note</button>
+                    </div>
+                </form>
             </aside>
             <div className="notes">
                 {
