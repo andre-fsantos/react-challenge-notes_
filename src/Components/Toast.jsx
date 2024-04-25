@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import './Toast.css';
 
-const Toast = ({ message, type, isToastVisible, setIsToastVisible }) => {
+const Toast = ({ toastConfig, isToastVisible, setIsToastVisible }) => {
     useEffect(() => {
         if(isToastVisible) {
             const TOAST_DURATION = 3000;
@@ -14,14 +14,14 @@ const Toast = ({ message, type, isToastVisible, setIsToastVisible }) => {
         }
     }, [isToastVisible]);
     
-    const bgColor = {
+    const className = {
         'success': 'successful-toast',
         'error': 'error-toast'
     }
 
-    const style = `toast ${ bgColor[type] }`;
+    const style = `toast ${ className[toastConfig.type] }`;
 
-    return isToastVisible && <div className={style}>{message}</div>
+    return isToastVisible && <div className={style}>{toastConfig.message}</div>
 }
 
 export { Toast }
