@@ -11,9 +11,7 @@ const Layout = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [isToastVisible, setIsToastVisible] = useState(false);
-
-    const [messageToast, setMessageToast] = useState('');
-    const [toastType, setToastType] = useState('');
+    const [toastConfig, setToastConfig] = useState({});
 
 
     const fecthGetNotes = async () => {
@@ -37,33 +35,34 @@ const Layout = () => {
             const id = response.id;
             
             if(id) {
-                setMessageToast('Nota adicionada!');
-                setToastType('success');
+                setToastConfig({ message: 'Nota adicionada!', type: 'success' });
                 setIsToastVisible(true);
 
-                setTitle('');
-                setDescription('');
                 setNotes((oldNotes) => [{ id, title, description }, ...oldNotes ]);
             }
-        } catch(error) {
-            console.log('erro no saveNote');
+        } catch (error) {
+            setToastConfig({ message: 'Não foi possível adicionar a nota!', type: 'error' });
+            setIsToastVisible(true);
         }
+
+        setTitle('');
+        setDescription('');
     }
 
-    const delNote = async noteId => {
+
+    const fetchDeleteNote = async noteId => {
         try {
             const response = await deleteNote(noteId);
-            const id = response.id;
 
-            if(id) {
-                setMessageToast('Nota excluída com sucesso!');
-                setToastType('success');
+            if(response.id) {
+                setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
                 setIsToastVisible(true);
 
-                setNotes(oldNotes => oldNotes.filter(note => note.id !== id));
+                setNotes(oldNotes => oldNotes.filter(note => note.id !== noteId));
             }
         } catch (error) {
-            console.log(error);
+            setToastConfig({ message: 'Não foi possível excluir a nota!', type: 'error' });
+            setIsToastVisible(true);
         }
     }
 
@@ -72,8 +71,7 @@ const Layout = () => {
         <main>
             {
                 <Toast
-                    message={messageToast}
-                    type={toastType}
+                    toastConfig={toastConfig}
                     isToastVisible={isToastVisible}
                     setIsToastVisible={setIsToastVisible}
                 />
@@ -104,7 +102,7 @@ const Layout = () => {
                                 key={note.id.toString()}
                                 title={note.title}
                                 description={note.description}
-                                delNote={() => delNote(note.id)}
+                                onClick={() => fetchDeleteNote(note.id)}
                             />
                         ))
                     )
