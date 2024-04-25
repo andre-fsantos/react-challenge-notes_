@@ -1,6 +1,7 @@
 import { Note } from "./Note"
 import { getNotes } from "../infrastructure/getNotes";
 import { saveNote } from "../infrastructure/saveNote";
+import { deleteNote } from "../infrastructure/deleteNote"
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
 import './Layout.css';
@@ -49,6 +50,24 @@ const Layout = () => {
         }
     }
 
+    const delNote = async noteId => {
+        try {
+            const response = await deleteNote(noteId);
+            const id = response.id;
+
+            if(id) {
+                setMessageToast('Nota excluída com sucesso!');
+                setToastType('success');
+                setIsToastVisible(true);
+
+                setNotes(oldNotes => oldNotes.filter(note => note.id !== id));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
         <main>
             {
@@ -85,6 +104,7 @@ const Layout = () => {
                                 key={note.id.toString()}
                                 title={note.title}
                                 description={note.description}
+                                delNote={() => delNote(note.id)}
                             />
                         ))
                     )
