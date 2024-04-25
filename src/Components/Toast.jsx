@@ -14,12 +14,12 @@ const Toast = ({ toastConfig, isToastVisible, setIsToastVisible }) => {
         }
     }, [isToastVisible]);
     
-    const backgroundColorClasses = {
+    const className = {
         'success': 'successful-toast',
         'error': 'error-toast'
     }
 
-    const style = `toast ${ backgroundColorClasses[toastConfig.type] }`;
+    const style = `toast ${ className[toastConfig.type] }`;
 
     return isToastVisible && <div className={style}>{toastConfig.message}</div>
 }
