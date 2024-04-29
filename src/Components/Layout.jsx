@@ -1,9 +1,11 @@
 import { Note } from "./Note"
 import { getNotes } from "../infrastructure/getNotes";
 import { saveNote } from "../infrastructure/saveNote";
-import { deleteNote } from "../infrastructure/deleteNote"
+import { deleteNote } from "../infrastructure/deleteNote";
+import { editNote } from "../infrastructure/editNote";
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
+import { Modal } from "./Modal";
 import './Layout.css';
 
 const Layout = () => {
@@ -12,6 +14,9 @@ const Layout = () => {
     const [description, setDescription] = useState('');
     const [isToastVisible, setIsToastVisible] = useState(false);
     const [toastConfig, setToastConfig] = useState({});
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [noteData, setNoteData] = useState({});
 
 
     const fecthGetNotes = async () => {
@@ -67,8 +72,44 @@ const Layout = () => {
     }
 
 
+    const fetchEditNote = async note => {
+        try {
+            const atualizaArray = (array, id, novaNota) => {
+                for(let i = 0; i < array.length; i++) {
+                    if(array[i].id === id) {
+                        array[i] = { ...array[i], ...novaNota }
+                    }
+                }
+                return array;
+            }
+
+            const response = await editNote(note);
+
+            if(response.id) {
+                const notesArray = atualizaArray([...notes], response.id, { title: response.title, description: response.description });
+                setNotes(notesArray);
+                setIsModalVisible(false);
+                setToastConfig({ message: 'Nota editada com sucesso!', type: 'success' });
+                setIsToastVisible(true);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+ 
+
+
     return (
         <main>
+            {
+                isModalVisible &&
+                <Modal
+                    isModalVisible={isModalVisible}
+                    setIsModalVisible={setIsModalVisible}
+                    oldNote={noteData}
+                    fetchEditNote={note => fetchEditNote({id: noteData.id, ...note})}
+                />
+            }
             {
                 <Toast
                     toastConfig={toastConfig}
@@ -102,7 +143,12 @@ const Layout = () => {
                                 key={note.id.toString()}
                                 title={note.title}
                                 description={note.description}
-                                onClick={() => fetchDeleteNote(note.id)}
+                                deleteNote={() => fetchDeleteNote(note.id)}
+                                
+                                editNote={() => {
+                                    setIsModalVisible(true);
+                                    setNoteData({ id: note.id, title: note.title, description: note.description });
+                                }}
                             />
                         ))
                     )

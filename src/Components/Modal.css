@@ -1,0 +1,30 @@
+.box-bg-modal {
+    background-color: #000000a1;
+    display: flex;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.input-title {
+    width: 100%;
+    padding: 5px;
+}
+
+.box-input-title {
+    margin: 10px 0 10px 0;
+}
+
+.box-button {
+    margin-top: 10px;
+}
