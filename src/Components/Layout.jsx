@@ -125,13 +125,13 @@ const Layout = () => {
                     }
                 }>
                     <div className="box-input-title">
-                        <input type="text" placeholder="Title" className="inputTitle" value={title} onChange={e => setTitle(e.target.value)} required/>
+                        <input type="text" placeholder="Title" tabIndex={1} className="inputTitle" value={title} onChange={e => setTitle(e.target.value)} required/>
                     </div>
                     <div className="box-textarea">
-                        <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+                        <textarea placeholder="Content" tabIndex={2} value={description} onChange={e => setDescription(e.target.value)} required></textarea>
                     </div>
                     <div>
-                        <button>Add Note</button>
+                        <button tabIndex={3}>Add Note</button>
                     </div>
                 </form>
             </aside>

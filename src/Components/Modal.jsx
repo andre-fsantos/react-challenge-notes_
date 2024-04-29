@@ -27,13 +27,13 @@ const Modal = ({ isModalVisible, setIsModalVisible, oldNote, fetchEditNote }) =>
                     <div className="box-form">
                         <form onSubmit={formData}>
                             <div className="box-input-title">
-                                <input type="text" className="input-title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" required/>
+                                <input type="text" className="input-title" tabIndex={5} value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" required/>
                             </div>
                             <div>
-                                <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+                                <textarea placeholder="Content" tabIndex={6} value={description} onChange={e => setDescription(e.target.value)} required></textarea>
                             </div>
                             <div className="box-button">
-                                <button>Salvar</button>
+                                <button tabIndex={7}>Salvar</button>
                             </div>
                         </form>
                     </div>
