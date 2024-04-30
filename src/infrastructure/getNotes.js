@@ -1,4 +1,4 @@
-const getNotes = async () => {
+const fetchGetNotes = async () => {
     try {
         const response = await fetch(`http://localhost:3000/notes`);
         if(!response.ok) {
@@ -11,4 +11,4 @@ const getNotes = async () => {
     }
 }
 
-export { getNotes }
+export { fetchGetNotes }

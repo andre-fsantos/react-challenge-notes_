@@ -1,7 +1,9 @@
-import { Note } from "./Note"
-import { getNotes } from "../infrastructure/getNotes";
-import { saveNote } from "../infrastructure/saveNote";
-import { deleteNote } from "../infrastructure/deleteNote"
+import { Note } from "./Note";
+import { fetchGetNotes } from "../infrastructure/getNotes";
+import { fetchAddNote } from "../infrastructure/saveNote";
+import { fetchDeleteNote } from "../infrastructure/deleteNote";
+import { fetchEditNote } from "../infrastructure/editNote";
+import { Modal } from "./Modal";
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
 import './Layout.css';
@@ -13,10 +15,12 @@ const Layout = () => {
     const [isToastVisible, setIsToastVisible] = useState(false);
     const [toastConfig, setToastConfig] = useState({});
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [noteData, setNoteData] = useState({});
 
-    const fecthGetNotes = async () => {
+    const getNotes = async () => {
         try {
-            const notes = await getNotes();
+            const notes = await fetchGetNotes();
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
@@ -25,20 +29,19 @@ const Layout = () => {
     }
 
     useEffect(() => {
-        fecthGetNotes();
-    }, []); 
+        getNotes();
+    }, []);
 
 
     const addNote = async () => {
         try {
-            const response = await saveNote({ title, description });
-            const id = response.id;
+            const note = await fetchAddNote({ title, description });
             
-            if(id) {
+            if(note.id) {
                 setToastConfig({ message: 'Nota adicionada!', type: 'success' });
                 setIsToastVisible(true);
 
-                setNotes((oldNotes) => [{ id, title, description }, ...oldNotes ]);
+                setNotes((oldNotes) => [note, ...oldNotes ]);
             }
         } catch (error) {
             setToastConfig({ message: 'Não foi possível adicionar a nota!', type: 'error' });
@@ -50,9 +53,9 @@ const Layout = () => {
     }
 
 
-    const fetchDeleteNote = async noteId => {
+    const deleteNote = async noteId => {
         try {
-            const response = await deleteNote(noteId);
+            const response = await fetchDeleteNote(noteId);
 
             if(response.id) {
                 setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
@@ -66,9 +69,36 @@ const Layout = () => {
         }
     }
 
+    const editNote = async newNote => {
+        try {
+            const response = await fetchEditNote(newNote);
+
+            if(response.id) {
+                const nextNotes = notes.map(oldNote => oldNote.id === newNote.id ? newNote : oldNote);
+
+                setNotes(nextNotes);
+                setIsModalVisible(false);
+
+                setToastConfig({ message: 'Nota editada com sucesso!', type: 'success' });
+                setIsToastVisible(true);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <main>
+            {
+                isModalVisible &&
+                <Modal
+                    isModalVisible={isModalVisible}
+                    setIsModalVisible={setIsModalVisible}
+                    oldNote={noteData}
+                    onConfirm={editNote}
+                />
+            }
             {
                 <Toast
                     toastConfig={toastConfig}
@@ -84,13 +114,13 @@ const Layout = () => {
                     }
                 }>
                     <div className="box-input-title">
-                        <input type="text" placeholder="Title" className="inputTitle" value={title} onChange={e => setTitle(e.target.value)} required/>
+                        <input type="text" placeholder="Title" tabIndex={1} className="inputTitle" value={title} onChange={e => setTitle(e.target.value)} required/>
                     </div>
                     <div className="box-textarea">
-                        <textarea placeholder="Content" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+                        <textarea placeholder="Content" tabIndex={2} value={description} onChange={e => setDescription(e.target.value)} required></textarea>
                     </div>
                     <div>
-                        <button>Add Note</button>
+                        <button tabIndex={3}>Add Note</button>
                     </div>
                 </form>
             </aside>
@@ -102,7 +132,12 @@ const Layout = () => {
                                 key={note.id.toString()}
                                 title={note.title}
                                 description={note.description}
-                                onClick={() => fetchDeleteNote(note.id)}
+                                deleteNote={() => deleteNote(note.id)}
+
+                                editNote={() => {
+                                    setIsModalVisible(true);
+                                    setNoteData(note);
+                                }}
                             />
                         ))
                     )

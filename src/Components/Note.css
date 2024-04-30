@@ -11,7 +11,6 @@
     display: flex;
     background-color: transparent;
     width: fit-content;
-    margin-left: auto;
     padding: 1px;
     border-radius: 50%;
 }
@@ -22,4 +21,22 @@
 
 .box-content {
     margin-top: 20px;
+}
+
+.box-btns {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.box-btn-edit {
+    display: flex;
+    margin-right: 6px;
+    border-radius: 50%;
+    width: fit-content;
+    padding: 1px;
+    background-color: transparent;
+}
+
+.box-btn-edit:hover {
+    background-color: #f3f09c;
 }
