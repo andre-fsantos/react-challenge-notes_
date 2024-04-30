@@ -1,4 +1,4 @@
-const saveNote = async note => {
+const fetchAddNote = async note => {
     try {
         const options = {
             method: 'POST',
@@ -22,4 +22,4 @@ const saveNote = async note => {
     }
 }
 
-export { saveNote }
+export { fetchAddNote }

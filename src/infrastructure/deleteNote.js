@@ -1,4 +1,4 @@
-const deleteNote = async id => {
+const fetchDeleteNote = async id => {
     try {
         const options = {
             method: 'DELETE'
@@ -20,4 +20,4 @@ const deleteNote = async id => {
     }
 }
 
-export { deleteNote }
+export { fetchDeleteNote }
