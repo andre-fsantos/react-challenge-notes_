@@ -32,13 +32,8 @@
     display: flex;
     margin-right: 6px;
     border-radius: 50%;
-<<<<<<< Updated upstream
-    padding: 1px;
-    width: max-content;
-=======
     width: fit-content;
     padding: 1px;
->>>>>>> Stashed changes
     background-color: transparent;
 }
 

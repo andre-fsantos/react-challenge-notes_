@@ -1,20 +1,11 @@
-<<<<<<< Updated upstream
-import { Note } from "./Note"
-import { getNotes } from "../infrastructure/getNotes";
-import { saveNote } from "../infrastructure/saveNote";
-import { deleteNote } from "../infrastructure/deleteNote";
-import { editNote } from "../infrastructure/editNote";
-=======
 import { Note } from "./Note";
 import { fetchGetNotes } from "../infrastructure/getNotes";
 import { fetchAddNote } from "../infrastructure/saveNote";
 import { fetchDeleteNote } from "../infrastructure/deleteNote";
 import { fetchEditNote } from "../infrastructure/editNote";
 import { Modal } from "./Modal";
->>>>>>> Stashed changes
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
-import { Modal } from "./Modal";
 import './Layout.css';
 
 const Layout = () => {
@@ -26,10 +17,6 @@ const Layout = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [noteData, setNoteData] = useState({});
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
     const getNotes = async () => {
         try {
@@ -101,33 +88,6 @@ const Layout = () => {
     }
 
 
-    const fetchEditNote = async note => {
-        try {
-            const atualizaArray = (array, id, novaNota) => {
-                for(let i = 0; i < array.length; i++) {
-                    if(array[i].id === id) {
-                        array[i] = { ...array[i], ...novaNota }
-                    }
-                }
-                return array;
-            }
-
-            const response = await editNote(note);
-
-            if(response.id) {
-                const notesArray = atualizaArray([...notes], response.id, { title: response.title, description: response.description });
-                setNotes(notesArray);
-                setIsModalVisible(false);
-                setToastConfig({ message: 'Nota editada com sucesso!', type: 'success' });
-                setIsToastVisible(true);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
- 
-
-
     return (
         <main>
             {
@@ -136,11 +96,7 @@ const Layout = () => {
                     isModalVisible={isModalVisible}
                     setIsModalVisible={setIsModalVisible}
                     oldNote={noteData}
-<<<<<<< Updated upstream
-                    fetchEditNote={note => fetchEditNote({id: noteData.id, ...note})}
-=======
                     onConfirm={editNote}
->>>>>>> Stashed changes
                 />
             }
             {
@@ -176,19 +132,11 @@ const Layout = () => {
                                 key={note.id.toString()}
                                 title={note.title}
                                 description={note.description}
-<<<<<<< Updated upstream
-                                deleteNote={() => fetchDeleteNote(note.id)}
-                                
-                                editNote={() => {
-                                    setIsModalVisible(true);
-                                    setNoteData({ id: note.id, title: note.title, description: note.description });
-=======
                                 deleteNote={() => deleteNote(note.id)}
 
                                 editNote={() => {
                                     setIsModalVisible(true);
                                     setNoteData(note);
->>>>>>> Stashed changes
                                 }}
                             />
                         ))
