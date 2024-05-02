@@ -1,6 +1,11 @@
-const fetchData = async (url, options) => {
+const fetchData = async (options = {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}, noteId = '') => {
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(`http://localhost:3000/notes/${noteId}`, options);
 
         if(!response.ok) {
             console.log('Erro de requisição!');
@@ -13,34 +18,20 @@ const fetchData = async (url, options) => {
     }
 }
 
-export const httpGet = async url => {
-    return await fetchData(url, {
-        method: 'GET'
-    });
-}
+export const httpGet = async () => await fetchData();
 
-export const httpPost = async (url, data) => {
-    return await fetchData(url, {
+export const httpPost = async data => {
+    return await fetchData({
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify(data)
     });
 }
 
-export const httpPatch = async (url, data) => {
-    return await fetchData(url, {
+export const httpPatch = async (data, noteId) => {
+    return await fetchData({
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify(data)
-    });
+    }, noteId);
 }
 
-export const httpDelete = async url => {
-    return await fetchData(url, {
-        method: 'DELETE'
-    });
-}
+export const httpDelete = async noteId => await fetchData({method: 'DELETE'}, noteId);

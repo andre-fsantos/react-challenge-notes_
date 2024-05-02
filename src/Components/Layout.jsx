@@ -15,11 +15,9 @@ const Layout = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [noteData, setNoteData] = useState({});
 
-    const END_POINT = 'http://localhost:3000/notes/';
-
     const getNotes = async () => {
         try {
-            const notes = await httpGet(END_POINT);
+            const notes = await httpGet();
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
@@ -34,7 +32,7 @@ const Layout = () => {
 
     const addNote = async () => {
         try {
-            const note = await httpPost(END_POINT, { title, description });
+            const note = await httpPost({ title, description });
             
             if(note.id) {
                 setToastConfig({ message: 'Nota adicionada!', type: 'success' });
@@ -54,7 +52,7 @@ const Layout = () => {
 
     const deleteNote = async noteId => {
         try {
-            const response = await httpDelete(`${END_POINT}${noteId}`);
+            const response = await httpDelete(noteId);
 
             if(response.id) {
                 setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
@@ -72,7 +70,7 @@ const Layout = () => {
         const {id} = newNote;
 
         try {
-            const response = await httpPatch(`${END_POINT}${id}`, newNote);
+            const response = await httpPatch(newNote, id);
 
             if(response.id) {
                 const nextNotes = notes.map(oldNote => oldNote.id === newNote.id ? newNote : oldNote);
