@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpPatch, httpDelete } from "../infrastructure/http";
+import { noteHttpRequests } from "../infrastructure/http";
 import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
@@ -17,11 +17,13 @@ const Layout = () => {
 
     const getNotes = async () => {
         try {
-            const notes = await httpGet();
+            const notes = await noteHttpRequests({ type: 'getNotes' });
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
-            console.log('erro no fecthGetNotes');
+            setToastConfig({ message: error.message, type: 'error' });
+            setIsToastVisible(true);
+            throw Error(error.message);
         }
     }
 
@@ -32,7 +34,8 @@ const Layout = () => {
 
     const addNote = async () => {
         try {
-            const note = await httpPost({ title, description });
+            const noteData = { title, description };
+            const note = await noteHttpRequests({ type: 'setNote', payload: noteData });
             
             if(note.id) {
                 setToastConfig({ message: 'Nota adicionada!', type: 'success' });
@@ -52,7 +55,7 @@ const Layout = () => {
 
     const deleteNote = async noteId => {
         try {
-            const response = await httpDelete(noteId);
+            const response = await noteHttpRequests({ type: 'deleteNote', noteId });
 
             if(response.id) {
                 setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
@@ -70,7 +73,7 @@ const Layout = () => {
         const {id} = newNote;
 
         try {
-            const response = await httpPatch(newNote, id);
+            const response = await noteHttpRequests({ type: 'editNote', payload: newNote, noteId: id });
 
             if(response.id) {
                 const nextNotes = notes.map(oldNote => oldNote.id === newNote.id ? newNote : oldNote);

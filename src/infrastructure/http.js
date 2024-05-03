@@ -1,37 +1,61 @@
-const fetchData = async (options = {
-    method: 'GET',
+const httpClient = async (options = {}, noteId = "") => {
+  const defaultOptions = {
+    method: "GET",
     headers: {
-        'Content-Type': 'application/json'
+      "Content-Type": "application/json",
+    },
+    ...options,
+  };
+  try {
+    const response = await fetch(
+      `http://localhost:3000/notes/${noteId}`,
+      defaultOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
-}, noteId = '') => {
-    try {
-        const response = await fetch(`http://localhost:3000/notes/${noteId}`, options);
 
-        if(!response.ok) {
-            console.log('Erro de requisição!');
-            return;
-        }
+    return response.json();
+  } catch (error) {
+    throw new Error(
+      `Ocorreu um problema de conexão com o servidor: ${error.message}`
+    );
+  }
+};
 
-        return response.json();
-    } catch (error) {
-        console.log(error);
-    }
-}
+export const noteHttpRequests = async ({ type, payload, noteId }) => {
+  const httpGet = async () => await httpClient();
 
-export const httpGet = async () => await fetchData();
-
-export const httpPost = async data => {
-    return await fetchData({
-        method: 'POST',
-        body: JSON.stringify(data)
+  const httpPost = async () => {
+    return await httpClient({
+      method: "POST",
+      body: JSON.stringify(payload),
     });
-}
+  };
 
-export const httpPatch = async (data, noteId) => {
-    return await fetchData({
-        method: 'PATCH',
-        body: JSON.stringify(data)
-    }, noteId);
-}
+  const httpPatch = async () => {
+    return await httpClient(
+      {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      },
+      noteId
+    );
+  };
 
-export const httpDelete = async noteId => await fetchData({method: 'DELETE'}, noteId);
+  const httpDelete = async () => await httpClient({ method: "DELETE" }, noteId);
+
+  switch (type) {
+    case "getNotes":
+      return await httpGet();
+    case "setNote":
+      return await httpPost();
+    case "editNote":
+      return await httpPatch();
+    case "deleteNote":
+      return await httpDelete();
+    default:
+      throw new Error("Operação desconhecida");
+  }
+};
