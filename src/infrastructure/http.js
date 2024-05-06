@@ -1,4 +1,6 @@
-const httpClient = async (options = {}, noteId = "") => {
+const httpClient = async (optionsWithId = {}) => {
+  const { id = '', ...options } = optionsWithId;
+
   const defaultOptions = {
     method: "GET",
     headers: {
@@ -6,9 +8,10 @@ const httpClient = async (options = {}, noteId = "") => {
     },
     ...options,
   };
+
   try {
     const response = await fetch(
-      `http://localhost:3000/notes/${noteId}`,
+      `http://localhost:3000/notes/${id}`,
       defaultOptions
     );
 
@@ -19,18 +22,19 @@ const httpClient = async (options = {}, noteId = "") => {
     return response.json();
   } catch (error) {
     throw new Error(
-      `Ocorreu um problema de conexão com o servidor: ${error.message}`
+      `There was a problem connecting to the server: ${error.message}`
     );
   }
 };
 
-export const noteHttpRequests = async ({ type, payload, noteId }) => {
+export const noteHttpRequests = async ({ type, payload }) => {
+  const { id = '', ...data } = payload;
   const httpGet = async () => await httpClient();
 
   const httpPost = async () => {
     return await httpClient({
       method: "POST",
-      body: JSON.stringify(payload),
+      body: JSON.stringify(data),
     });
   };
 
@@ -38,13 +42,13 @@ export const noteHttpRequests = async ({ type, payload, noteId }) => {
     return await httpClient(
       {
         method: "PATCH",
-        body: JSON.stringify(payload),
-      },
-      noteId
+        body: JSON.stringify(data),
+        id
+      }
     );
   };
 
-  const httpDelete = async () => await httpClient({ method: "DELETE" }, noteId);
+  const httpDelete = async () => await httpClient({ method: "DELETE", id });
 
   switch (type) {
     case "getNotes":
@@ -56,6 +60,6 @@ export const noteHttpRequests = async ({ type, payload, noteId }) => {
     case "deleteNote":
       return await httpDelete();
     default:
-      throw new Error("Operação desconhecida");
+      throw new Error("Unknown operation");
   }
 };

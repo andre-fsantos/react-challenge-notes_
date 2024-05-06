@@ -17,13 +17,13 @@ const Layout = () => {
 
     const getNotes = async () => {
         try {
-            const notes = await noteHttpRequests({ type: 'getNotes' });
+            const notes = await noteHttpRequests({ type: 'getNotes', payload: {} });
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
             setToastConfig({ message: error.message, type: 'error' });
             setIsToastVisible(true);
-            throw Error(error.message);
+            throw new Error(error.message);
         }
     }
 
@@ -36,7 +36,7 @@ const Layout = () => {
         try {
             const noteData = { title, description };
             const note = await noteHttpRequests({ type: 'setNote', payload: noteData });
-            
+
             if(note.id) {
                 setToastConfig({ message: 'Nota adicionada!', type: 'success' });
                 setIsToastVisible(true);
@@ -55,7 +55,7 @@ const Layout = () => {
 
     const deleteNote = async noteId => {
         try {
-            const response = await noteHttpRequests({ type: 'deleteNote', noteId });
+            const response = await noteHttpRequests({ type: 'deleteNote', payload: {id: noteId} });
 
             if(response.id) {
                 setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
@@ -70,10 +70,8 @@ const Layout = () => {
     }
 
     const editNote = async (newNote) => {
-        const {id} = newNote;
-
         try {
-            const response = await noteHttpRequests({ type: 'editNote', payload: newNote, noteId: id });
+            const response = await noteHttpRequests({ type: 'editNote', payload: newNote });
 
             if(response.id) {
                 const nextNotes = notes.map(oldNote => oldNote.id === newNote.id ? newNote : oldNote);
