@@ -27,7 +27,7 @@ const httpClient = async (optionsWithId = {}) => {
   }
 };
 
-export const noteHttpRequests = async ({ type, payload }) => {
+export const fetchNotesApi = async ({ type, payload }) => {
   const { id = '', ...data } = payload;
   const httpGet = async () => await httpClient();
 
@@ -52,13 +52,13 @@ export const noteHttpRequests = async ({ type, payload }) => {
 
   switch (type) {
     case "getNotes":
-      return await httpGet();
+      return httpGet();
     case "setNote":
-      return await httpPost();
+      return httpPost();
     case "editNote":
-      return await httpPatch();
+      return httpPatch();
     case "deleteNote":
-      return await httpDelete();
+      return httpDelete();
     default:
       throw new Error("Unknown operation");
   }

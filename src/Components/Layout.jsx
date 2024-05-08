@@ -1,4 +1,4 @@
-import { noteHttpRequests } from "../infrastructure/http";
+import { fetchNotesApi } from "../infrastructure/http";
 import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
@@ -17,13 +17,13 @@ const Layout = () => {
 
     const getNotes = async () => {
         try {
-            const notes = await noteHttpRequests({ type: 'getNotes', payload: {} });
+            const notes = await fetchNotesApi({ type: 'getNotes', payload: {} });
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
             setToastConfig({ message: error.message, type: 'error' });
             setIsToastVisible(true);
-            throw new Error(error.message);
+            console.log('An error has occurred:', error.message);
         }
     }
 
@@ -35,7 +35,7 @@ const Layout = () => {
     const addNote = async () => {
         try {
             const noteData = { title, description };
-            const note = await noteHttpRequests({ type: 'setNote', payload: noteData });
+            const note = await fetchNotesApi({ type: 'setNote', payload: noteData });
 
             if(note.id) {
                 setToastConfig({ message: 'Nota adicionada!', type: 'success' });
@@ -55,7 +55,7 @@ const Layout = () => {
 
     const deleteNote = async noteId => {
         try {
-            const response = await noteHttpRequests({ type: 'deleteNote', payload: {id: noteId} });
+            const response = await fetchNotesApi({ type: 'deleteNote', payload: {id: noteId} });
 
             if(response.id) {
                 setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
@@ -71,7 +71,7 @@ const Layout = () => {
 
     const editNote = async (newNote) => {
         try {
-            const response = await noteHttpRequests({ type: 'editNote', payload: newNote });
+            const response = await fetchNotesApi({ type: 'editNote', payload: newNote });
 
             if(response.id) {
                 const nextNotes = notes.map(oldNote => oldNote.id === newNote.id ? newNote : oldNote);
