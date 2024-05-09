@@ -1,8 +1,5 @@
+import { fetchNotesApi } from "../infrastructure/fetchNotesApi";
 import { Note } from "./Note";
-import { fetchGetNotes } from "../infrastructure/getNotes";
-import { fetchAddNote } from "../infrastructure/saveNote";
-import { fetchDeleteNote } from "../infrastructure/deleteNote";
-import { fetchEditNote } from "../infrastructure/editNote";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
@@ -20,11 +17,13 @@ const Layout = () => {
 
     const getNotes = async () => {
         try {
-            const notes = await fetchGetNotes();
+            const notes = await fetchNotesApi({ type: 'getNotes' });
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
-            console.log('erro no fecthGetNotes');
+            setToastConfig({ message: error.message, type: 'error' });
+            setIsToastVisible(true);
+            console.log('An error has occurred:', error.message);
         }
     }
 
@@ -35,8 +34,9 @@ const Layout = () => {
 
     const addNote = async () => {
         try {
-            const note = await fetchAddNote({ title, description });
-            
+            const noteData = { title, description };
+            const note = await fetchNotesApi({ type: 'setNote', payload: noteData });
+
             if(note.id) {
                 setToastConfig({ message: 'Nota adicionada!', type: 'success' });
                 setIsToastVisible(true);
@@ -55,7 +55,7 @@ const Layout = () => {
 
     const deleteNote = async noteId => {
         try {
-            const response = await fetchDeleteNote(noteId);
+            const response = await fetchNotesApi({ type: 'deleteNote', payload: {id: noteId} });
 
             if(response.id) {
                 setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
@@ -69,9 +69,9 @@ const Layout = () => {
         }
     }
 
-    const editNote = async newNote => {
+    const editNote = async (newNote) => {
         try {
-            const response = await fetchEditNote(newNote);
+            const response = await fetchNotesApi({ type: 'editNote', payload: newNote });
 
             if(response.id) {
                 const nextNotes = notes.map(oldNote => oldNote.id === newNote.id ? newNote : oldNote);
