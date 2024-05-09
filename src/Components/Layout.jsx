@@ -1,4 +1,4 @@
-import { fetchNotesApi } from "../infrastructure/http";
+import { fetchNotesApi } from "../infrastructure/fetchNotesApi";
 import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
@@ -17,7 +17,7 @@ const Layout = () => {
 
     const getNotes = async () => {
         try {
-            const notes = await fetchNotesApi({ type: 'getNotes', payload: {} });
+            const notes = await fetchNotesApi({ type: 'getNotes' });
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {

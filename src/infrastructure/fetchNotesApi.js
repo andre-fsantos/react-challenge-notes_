@@ -27,7 +27,7 @@ const httpClient = async (optionsWithId = {}) => {
   }
 };
 
-export const fetchNotesApi = async ({ type, payload }) => {
+export const fetchNotesApi = async ({ type, payload = {} }) => {
   const { id = '', ...data } = payload;
   const httpGet = async () => await httpClient();
 
