@@ -1,0 +1,14 @@
+.box-input-title {
+    margin: 10px 0 10px 0;
+}
+
+.note-title {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+.box-textarea {
+    margin: 15px 0;
+}

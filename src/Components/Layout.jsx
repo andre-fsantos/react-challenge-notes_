@@ -3,6 +3,7 @@ import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
+import { NoteForm } from "./note-form";
 import './Layout.css';
 
 const Layout = () => {
@@ -107,22 +108,16 @@ const Layout = () => {
                 />
             }
             <aside>
-                <form onSubmit={
-                    event => {
-                        event.preventDefault();
+                <NoteForm
+                    title={title}
+                    description={description}
+                    onTitleChange={e => setTitle(e.target.value)}
+                    onDescriptionChange={e => setDescription(e.target.value)}
+                    onSubmit={e => {
+                        e.preventDefault();
                         addNote();
-                    }
-                }>
-                    <div className="box-input-title">
-                        <input type="text" placeholder="Title" tabIndex={1} className="inputTitle" value={title} onChange={e => setTitle(e.target.value)} required/>
-                    </div>
-                    <div className="box-textarea">
-                        <textarea placeholder="Content" tabIndex={2} value={description} onChange={e => setDescription(e.target.value)} required></textarea>
-                    </div>
-                    <div>
-                        <button tabIndex={3}>Add Note</button>
-                    </div>
-                </form>
+                    }}
+                />
             </aside>
             <div className="notes">
                 {
@@ -135,8 +130,8 @@ const Layout = () => {
                                 deleteNote={() => deleteNote(note.id)}
 
                                 editNote={() => {
-                                    setIsModalVisible(true);
                                     setNoteData(note);
+                                    setIsModalVisible(true);
                                 }}
                             />
                         ))
