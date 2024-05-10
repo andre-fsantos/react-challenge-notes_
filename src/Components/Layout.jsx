@@ -4,6 +4,7 @@ import { Modal } from "./Modal";
 import { Toast } from "./Toast";
 import { useEffect, useState } from "react";
 import { NoteForm } from "./note-form";
+import { NotesList } from "./notes-list";
 import './Layout.css';
 
 const Layout = () => {
@@ -119,25 +120,15 @@ const Layout = () => {
                     }}
                 />
             </aside>
-            <div className="notes">
-                {
-                    notes.length > 0 && (
-                        notes.map(note => (
-                            <Note
-                                key={note.id.toString()}
-                                title={note.title}
-                                description={note.description}
-                                deleteNote={() => deleteNote(note.id)}
-
-                                editNote={() => {
-                                    setNoteData(note);
-                                    setIsModalVisible(true);
-                                }}
-                            />
-                        ))
-                    )
-                }
-            </div>
+            
+            <NotesList
+                notes={notes}
+                deleteNote={deleteNote}
+                editNote={note => {
+                    setNoteData(note);
+                    setIsModalVisible(true);
+                }}
+            />
         </main>
     )
 }
