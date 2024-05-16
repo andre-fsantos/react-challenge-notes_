@@ -2,18 +2,19 @@ import { fetchNotesApi } from "../infrastructure/fetchNotesApi";
 import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
-import { useEffect, useState } from "react";
-import './Layout.css';
+import { useContext, useEffect, useState } from "react";
+import "./Layout.css";
+import { ToastContext } from "../contexts/ToastContext";
 
 const Layout = () => {
     const [notes, setNotes] = useState([]);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [isToastVisible, setIsToastVisible] = useState(false);
-    const [toastConfig, setToastConfig] = useState({});
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [noteData, setNoteData] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [noteData, setNoteData] = useState({});
+
+  const { showToast } = useContext(ToastContext);
 
     const getNotes = async () => {
         try {
@@ -21,10 +22,11 @@ const Layout = () => {
             const orderedNotes = [...notes].reverse();
             setNotes(orderedNotes);
         } catch (error) {
-            setToastConfig({ message: error.message, type: 'error' });
-            setIsToastVisible(true);
-            console.log('An error has occurred:', error.message);
-        }
+      showToast({
+        message: error.message,
+        type: "error",
+      });
+    }
     }
 
     useEffect(() => {
@@ -37,16 +39,20 @@ const Layout = () => {
             const noteData = { title, description };
             const note = await fetchNotesApi({ type: 'setNote', payload: noteData });
 
-            if(note.id) {
-                setToastConfig({ message: 'Nota adicionada!', type: 'success' });
-                setIsToastVisible(true);
+      if (note.id) {
+        showToast({
+          type: "success",
+          message: "Nota adicionada com sucesso!",
+        });
 
                 setNotes((oldNotes) => [note, ...oldNotes ]);
             }
         } catch (error) {
-            setToastConfig({ message: 'Não foi possível adicionar a nota!', type: 'error' });
-            setIsToastVisible(true);
-        }
+      showToast({
+        message: "Não foi possível adicionar a nota!",
+        type: "error",
+      });
+    }
 
         setTitle('');
         setDescription('');
@@ -57,17 +63,21 @@ const Layout = () => {
         try {
             const response = await fetchNotesApi({ type: 'deleteNote', payload: {id: noteId} });
 
-            if(response.id) {
-                setToastConfig({ message: 'Nota excluída com sucesso!', type: 'success' });
-                setIsToastVisible(true);
+      if (response.id) {
+        showToast({
+          message: "Nota excluída com sucesso!",
+          type: "success",
+        });
 
-                setNotes(oldNotes => oldNotes.filter(note => note.id !== noteId));
-            }
-        } catch (error) {
-            setToastConfig({ message: 'Não foi possível excluir a nota!', type: 'error' });
-            setIsToastVisible(true);
-        }
+        setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
+      }
+    } catch (error) {
+      showToast({
+        message: "Não foi possível excluir a nota!",
+        type: "error",
+      });
     }
+  };
 
     const editNote = async (newNote) => {
         try {
@@ -79,25 +89,27 @@ const Layout = () => {
                 setNotes(nextNotes);
                 setIsModalVisible(false);
 
-                setToastConfig({ message: 'Nota editada com sucesso!', type: 'success' });
-                setIsToastVisible(true);
-            }
-        } catch (error) {
-            console.log(error);
+        showToast({
+          message: "Nota editada com sucesso!",
+          type: "success",
+        });
+      }
+    } catch (error) {
+      console.log(error);
         }
     }
 
 
     return (
         <main>
-            {
-                isModalVisible &&
-                <Modal
-                    isModalVisible={isModalVisible}
-                    setIsModalVisible={setIsModalVisible}
-                    oldNote={noteData}
-                    onConfirm={editNote}
-                />
+      <Toast />
+      {isModalVisible && (
+        <Modal
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+          oldNote={noteData}
+          onConfirm={editNote}
+        />
             }
             {
                 <Toast
