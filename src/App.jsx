@@ -1,11 +1,14 @@
 import { Layout } from "./Components/Layout";
-import "./App.css";
 import { ToastProvider } from "./contexts/ToastContext";
+import { ModalProvider } from "./contexts/ModalContext";
+import "./App.css";
 
 export default function App() {
   return (
     <ToastProvider>
-      <Layout />
+      <ModalProvider>
+        <Layout />
+      </ModalProvider>
     </ToastProvider>
   );
 }

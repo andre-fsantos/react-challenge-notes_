@@ -2,19 +2,21 @@ import { fetchNotesApi } from "../infrastructure/fetchNotesApi";
 import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
+import { EditNoteForm } from "./EditNoteForm";
 import { useContext, useEffect, useState } from "react";
-import "./Layout.css";
 import { ToastContext } from "../contexts/ToastContext";
+import { ModalContext } from "../contexts/ModalContext";
+import "./Layout.css";
 
 const Layout = () => {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [noteData, setNoteData] = useState({});
 
   const { showToast } = useContext(ToastContext);
+  const { openModal } = useContext(ModalContext);
 
   const getNotes = async () => {
     try {
@@ -93,7 +95,6 @@ const Layout = () => {
         );
 
         setNotes(nextNotes);
-        setIsModalVisible(false);
 
         showToast({
           message: "Nota editada com sucesso!",
@@ -108,21 +109,11 @@ const Layout = () => {
   return (
     <main>
       <Toast />
-      {isModalVisible && (
-        <Modal
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-          oldNote={noteData}
-          onConfirm={editNote}
-        />
-      )}
-      {
-        <Toast
-          toastConfig={toastConfig}
-          isToastVisible={isToastVisible}
-          setIsToastVisible={setIsToastVisible}
-        />
-      }
+
+      <Modal>
+        <EditNoteForm note={noteData} onSubmit={editNote} />
+      </Modal>
+
       <aside>
         <form
           onSubmit={(event) => {
@@ -164,8 +155,8 @@ const Layout = () => {
               description={note.description}
               deleteNote={() => deleteNote(note.id)}
               editNote={() => {
-                setIsModalVisible(true);
                 setNoteData(note);
+                openModal();
               }}
             />
           ))}
