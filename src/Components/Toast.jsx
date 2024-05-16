@@ -1,27 +1,27 @@
-import { useEffect } from 'react';
-import './Toast.css';
+import { useEffect } from "react";
+import "../styles/components/Toast.css";
 
 const Toast = ({ toastConfig, isToastVisible, setIsToastVisible }) => {
-    useEffect(() => {
-        if(isToastVisible) {
-            const TOAST_DURATION = 3000;
+  useEffect(() => {
+    if (isToastVisible) {
+      const TOAST_DURATION = 3000;
 
-            const timeout = setTimeout(() => {
-                setIsToastVisible(false);
-            }, TOAST_DURATION);
-            
-            return () => clearTimeout(timeout);
-        }
-    }, [isToastVisible]);
-    
-    const className = {
-        'success': 'successful-toast',
-        'error': 'error-toast'
+      const timeout = setTimeout(() => {
+        setIsToastVisible(false);
+      }, TOAST_DURATION);
+
+      return () => clearTimeout(timeout);
     }
+  }, [isToastVisible]);
 
-    const style = `toast ${ className[toastConfig.type] }`;
+  const className = {
+    success: "successful-toast",
+    error: "error-toast",
+  };
 
-    return isToastVisible && <div className={style}>{toastConfig.message}</div>
-}
+  const style = `toast ${className[toastConfig.type]}`;
 
-export { Toast }
+  return isToastVisible && <div className={style}>{toastConfig.message}</div>;
+};
+
+export { Toast };
