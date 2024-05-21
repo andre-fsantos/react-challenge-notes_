@@ -1,22 +1,15 @@
 import { fetchNotesApi } from "../infrastructure/fetchNotesApi";
+import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
-<<<<<<< refactor-modal-and-toast
 import { EditNoteForm } from "./EditNoteForm";
 import { useContext, useEffect, useState } from "react";
 import { ToastContext } from "../contexts/ToastContext";
 import { ModalContext } from "../contexts/ModalContext";
-=======
-import { useEffect, useState } from "react";
-import { NoteForm } from "./NoteForm";
-import { NotesList } from "./NotesList";
-import { Note } from "./Note";
->>>>>>> main
 import "./Layout.css";
 
 const Layout = () => {
   const [notes, setNotes] = useState([]);
-<<<<<<< refactor-modal-and-toast
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -25,30 +18,16 @@ const Layout = () => {
   const { showToast } = useContext(ToastContext);
   const { openModal } = useContext(ModalContext);
 
-=======
-  const [isToastVisible, setIsToastVisible] = useState(false);
-  const [toastConfig, setToastConfig] = useState({});
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [noteData, setNoteData] = useState({});
-
->>>>>>> main
   const getNotes = async () => {
     try {
       const notes = await fetchNotesApi({ type: "getNotes" });
       const orderedNotes = [...notes].reverse();
       setNotes(orderedNotes);
     } catch (error) {
-<<<<<<< refactor-modal-and-toast
       showToast({
         message: error.message,
         type: "error",
       });
-=======
-      setToastConfig({ message: error.message, type: "error" });
-      setIsToastVisible(true);
-      console.log("An error has occurred:", error.message);
->>>>>>> main
     }
   };
 
@@ -56,7 +35,6 @@ const Layout = () => {
     getNotes();
   }, []);
 
-<<<<<<< refactor-modal-and-toast
   const addNote = async () => {
     try {
       const noteData = { title, description };
@@ -171,91 +149,10 @@ const Layout = () => {
       <div className="notes">
         {notes.length > 0 &&
           notes.map((note) => (
-=======
-  const deleteNote = async (noteId) => {
-    try {
-      const response = await fetchNotesApi({
-        type: "deleteNote",
-        payload: { id: noteId },
-      });
-
-      if (response.id) {
-        setToastConfig({
-          message: "Nota excluída com sucesso!",
-          type: "success",
-        });
-        setIsToastVisible(true);
-
-        setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
-      }
-    } catch (error) {
-      setToastConfig({
-        message: "Não foi possível excluir a nota!",
-        type: "error",
-      });
-      setIsToastVisible(true);
-    }
-  };
-
-  const editNote = async (newNote) => {
-    try {
-      const response = await fetchNotesApi({
-        type: "editNote",
-        payload: newNote,
-      });
-
-      if (response.id) {
-        const nextNotes = notes.map((oldNote) =>
-          oldNote.id === newNote.id ? newNote : oldNote
-        );
-
-        setNotes(nextNotes);
-        setIsModalVisible(false);
-
-        setToastConfig({
-          message: "Nota editada com sucesso!",
-          type: "success",
-        });
-        setIsToastVisible(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  return (
-    <main>
-      {isModalVisible && (
-        <Modal
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-          oldNote={noteData}
-          onConfirm={editNote}
-        />
-      )}
-      {
-        <Toast
-          toastConfig={toastConfig}
-          isToastVisible={isToastVisible}
-          setIsToastVisible={setIsToastVisible}
-        />
-      }
-      <aside>
-        <NoteForm
-          onFinishSubmit={(note) => setNotes((oldNotes) => [note, ...oldNotes])}
-        />
-      </aside>
-
-      <NotesList
-        notes={notes}
-        renderNote={(note) => {
-          return (
->>>>>>> main
             <Note
               key={note.id.toString()}
               title={note.title}
               description={note.description}
-<<<<<<< refactor-modal-and-toast
               deleteNote={() => deleteNote(note.id)}
               editNote={() => {
                 setNoteData(note);
@@ -264,17 +161,6 @@ const Layout = () => {
             />
           ))}
       </div>
-=======
-              onDelete={() => deleteNote(note.id)}
-              onEdit={() => {
-                setNoteData(note);
-                setIsModalVisible(true);
-              }}
-            />
-          );
-        }}
-      />
->>>>>>> main
     </main>
   );
 };
