@@ -1,19 +1,22 @@
 import { fetchNotesApi } from "../infrastructure/fetchNotesApi";
+import { Note } from "./Note";
 import { Modal } from "./Modal";
 import { Toast } from "./Toast";
-import { useEffect, useState } from "react";
-import { NoteForm } from "./NoteForm";
-import { NotesList } from "./NotesList";
-import { Note } from "./Note";
+import { EditNoteForm } from "./EditNoteForm";
+import { useContext, useEffect, useState } from "react";
+import { ToastContext } from "../contexts/ToastContext";
+import { ModalContext } from "../contexts/ModalContext";
 import "./Layout.css";
 
 const Layout = () => {
   const [notes, setNotes] = useState([]);
-  const [isToastVisible, setIsToastVisible] = useState(false);
-  const [toastConfig, setToastConfig] = useState({});
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [noteData, setNoteData] = useState({});
+
+  const { showToast } = useContext(ToastContext);
+  const { openModal } = useContext(ModalContext);
 
   const getNotes = async () => {
     try {
@@ -21,15 +24,40 @@ const Layout = () => {
       const orderedNotes = [...notes].reverse();
       setNotes(orderedNotes);
     } catch (error) {
-      setToastConfig({ message: error.message, type: "error" });
-      setIsToastVisible(true);
-      console.log("An error has occurred:", error.message);
+      showToast({
+        message: error.message,
+        type: "error",
+      });
     }
   };
 
   useEffect(() => {
     getNotes();
   }, []);
+
+  const addNote = async () => {
+    try {
+      const noteData = { title, description };
+      const note = await fetchNotesApi({ type: "setNote", payload: noteData });
+
+      if (note.id) {
+        showToast({
+          type: "success",
+          message: "Nota adicionada com sucesso!",
+        });
+
+        setNotes((oldNotes) => [note, ...oldNotes]);
+      }
+    } catch (error) {
+      showToast({
+        message: "Não foi possível adicionar a nota!",
+        type: "error",
+      });
+    }
+
+    setTitle("");
+    setDescription("");
+  };
 
   const deleteNote = async (noteId) => {
     try {
@@ -39,20 +67,18 @@ const Layout = () => {
       });
 
       if (response.id) {
-        setToastConfig({
+        showToast({
           message: "Nota excluída com sucesso!",
           type: "success",
         });
-        setIsToastVisible(true);
 
         setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
       }
     } catch (error) {
-      setToastConfig({
+      showToast({
         message: "Não foi possível excluir a nota!",
         type: "error",
       });
-      setIsToastVisible(true);
     }
   };
 
@@ -69,13 +95,11 @@ const Layout = () => {
         );
 
         setNotes(nextNotes);
-        setIsModalVisible(false);
 
-        setToastConfig({
+        showToast({
           message: "Nota editada com sucesso!",
           type: "success",
         });
-        setIsToastVisible(true);
       }
     } catch (error) {
       console.log(error);
@@ -84,44 +108,59 @@ const Layout = () => {
 
   return (
     <main>
-      {isModalVisible && (
-        <Modal
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-          oldNote={noteData}
-          onConfirm={editNote}
-        />
-      )}
-      {
-        <Toast
-          toastConfig={toastConfig}
-          isToastVisible={isToastVisible}
-          setIsToastVisible={setIsToastVisible}
-        />
-      }
-      <aside>
-        <NoteForm
-          onFinishSubmit={(note) => setNotes((oldNotes) => [note, ...oldNotes])}
-        />
-      </aside>
+      <Toast />
 
-      <NotesList
-        notes={notes}
-        renderNote={(note) => {
-          return (
+      <Modal>
+        <EditNoteForm note={noteData} onSubmit={editNote} />
+      </Modal>
+
+      <aside>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            addNote();
+          }}
+        >
+          <div className="box-input-title">
+            <input
+              type="text"
+              placeholder="Title"
+              tabIndex={1}
+              className="inputTitle"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className="box-textarea">
+            <textarea
+              placeholder="Content"
+              tabIndex={2}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            ></textarea>
+          </div>
+          <div>
+            <button tabIndex={3}>Add Note</button>
+          </div>
+        </form>
+      </aside>
+      <div className="notes">
+        {notes.length > 0 &&
+          notes.map((note) => (
             <Note
               key={note.id.toString()}
               title={note.title}
               description={note.description}
-              onDelete={() => deleteNote(note.id)}
-              onEdit={() => {
+              deleteNote={() => deleteNote(note.id)}
+              editNote={() => {
                 setNoteData(note);
-                setIsModalVisible(true);
+                openModal();
               }}
             />
-          );
-        }}
-      />
+          ))}
+      </div>
     </main>
   );
 };
